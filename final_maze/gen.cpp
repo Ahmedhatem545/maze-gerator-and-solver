@@ -5,6 +5,9 @@
 #include <chrono>
 #include <cstdlib>
 #include <ctime>
+#include <random>
+#include<algorithm>
+#include <tuple>
 using namespace std;
 
 const int margin = 25;
@@ -148,3 +151,37 @@ void generateMaze_prim(Grid& grid, int startRow, int startCol, int endRow, int e
     grid.getCell(startRow, startCol).walls[0] = 0;
     grid.getCell(endRow, endCol).walls[2] = 0;
 }
+
+void generateMaze_binaryTree(Grid& grid, int startRow, int startCol, int endRow, int endCol)
+{
+    srand(time(NULL));
+    for (int row = grid.getRows()-1;row >=0;row--) {
+        for (int col = 0;col < grid.getColumns();col++) {
+            grid.getCell(row, col).visited = true;
+            vector<pair<int, int>> neighbors;
+            if (row > 0) {
+                neighbors.emplace_back(row - 1, col);
+            }
+            if (col < grid.getColumns() - 1) {
+                neighbors.emplace_back(row, col + 1);
+            }
+            if (!neighbors.empty()) {
+                pair<int, int> chosen = neighbors[rand() % neighbors.size()];
+                int nrow = chosen.first;
+                int ncol = chosen.second;
+                grid.removeWall(row, col, nrow, ncol);
+            }
+            BeginDrawing();
+            ClearBackground(WHITE);
+            grid.Draw(margin, margin);
+            EndDrawing();
+            this_thread::sleep_for(chrono::milliseconds(1));
+        }
+    }
+    grid.getCell(startRow, startCol).walls[0] = false;
+    grid.getCell(endRow, endCol).walls[2] = false;
+}
+
+
+
+

@@ -12,4 +12,5 @@ public:
 private:
     Texture2D texture;
     Vector2 positon; // Typo kept as requested
+    bool isHovered;
 };

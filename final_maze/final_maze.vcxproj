@@ -139,6 +139,7 @@
     <ClInclude Include="cell_grid.h" />
     <ClInclude Include="game_loop.h" />
     <ClInclude Include="gen.h" />
+    <ClInclude Include="headers\button.h" />
     <ClInclude Include="solve.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

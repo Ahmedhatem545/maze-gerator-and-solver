@@ -20,7 +20,9 @@ button::button(const char* imagePath, Vector2 imagePosition, float scale) {
     UnloadImage(image);
 
     // Set the position of the button
-    positon = imagePosition;  // Keeping the typo as requested
+    positon = imagePosition;  
+
+    isHovered = false;
 }
 
 button::~button() {
@@ -30,15 +32,17 @@ button::~button() {
 
 void button::Draw() {
     // Draw the button texture at its position
-    DrawTextureV(texture, positon, WHITE);  // Using 'positon' as requested
+    DrawTextureV(texture, positon, isHovered ? GRAY : WHITE);
 }
 
 bool button::is_pressed(Vector2 mousePos, bool mousePressed) {
     // Create a rectangle for the button based on its position and size
     Rectangle rect = { positon.x, positon.y, static_cast<float>(texture.width), static_cast<float>(texture.height) };
 
-    // Check if the mouse position is within the button's rectangle and if the button was pressed
-    if (CheckCollisionPointRec(mousePos, rect) && mousePressed) {
+    // Check for hover state
+    isHovered = CheckCollisionPointRec(mousePos, rect); // Line 2 added
+
+    if (isHovered && mousePressed) {
         return true;
     }
     return false;

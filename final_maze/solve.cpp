@@ -124,10 +124,10 @@ void maze_solve_dijkstra(Grid& grid, int startRow, int startCol, int endRow, int
         grid.getCell(r, c).solved = true;
         std::tie(r, c) = prev[r][c];
 
-        BeginDrawing();
-        ClearBackground(WHITE);
-        grid.Draw(margin, margin);
-        EndDrawing();
+        //BeginDrawing();
+        //ClearBackground(WHITE);
+        //grid.Draw(margin, margin);
+        //EndDrawing();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
@@ -169,3 +169,50 @@ void maze_solve_left_wall_follower(Grid& grid, int startrow, int startcol, int e
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
+
+void maze_solve_right_wall_follower(Grid& grid, int startrow, int startcol, int endrow, int endcol) {
+    int dir = 2; // Start facing down (0 = up, 1 = right, 2 = down, 3 = left)
+    int row = startrow;
+    int col = startcol;
+
+    int dRow[4] = { -1, 0, 1, 0 }; // UP, RIGHT, DOWN, LEFT
+    int dCol[4] = { 0, 1, 0, -1 };
+
+    grid.getCell(row, col).solved = true;
+
+    while (!(row == endrow && col == endcol)) {
+        int rightDir = (dir + 1) % 4;  // Right relative to current direction
+        int frontDir = dir;
+
+        if (!grid.getCell(row, col).walls[rightDir]) {
+            dir = rightDir;
+            row += dRow[dir];
+            col += dCol[dir];
+        }
+        else if (!grid.getCell(row, col).walls[frontDir]) {
+            row += dRow[dir];
+            col += dCol[dir];
+        }
+        else {
+            dir = (dir + 3) % 4; // Turn left (counter-clockwise)
+        }
+
+        // Stay within grid bounds
+        if (row < 0 || row >= grid.getRows() || col < 0 || col >= grid.getColumns()) break;
+
+        grid.getCell(row, col).solved = true;
+
+        BeginDrawing();
+        ClearBackground(WHITE);
+        grid.Draw(margin, margin);
+        EndDrawing();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+
+    grid.getCell(endrow, endcol).solved = true;
+}
+
+
+
+
+
